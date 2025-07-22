@@ -32,3 +32,4 @@ export const Song = mongoose.model('Song', songSchema);
 
 // Exporting the model allows it to be used in other parts of the application
 // For example, you can import this model in your routes or controllers to interact with the songs collection in MongoDB.
+export default Song;

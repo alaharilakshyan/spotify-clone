@@ -1,17 +1,19 @@
 import { Router } from "express";
-import { deleteAlbum, createAlbum, createSong, deleteSong } from "#controllers/admin-controller";
+import { checkAdmin, deleteAlbum, createAlbum, createSong, deleteSong } from "#controllers/admin-controller";
 import { protectRoute, requireAdmin } from "../middleware/auth.middleware.js";
 
 const router = Router();
 
-router.get("/check", protectRoute, requireAdmin, checkAdmin)
+router.use(protectRoute, requireAdmin);
 
-router.post("/songs", protectRoute, requireAdmin, createSong);
-router.delete("/songs/:id", protectRoute, requireAdmin, deleteSong);
+router.get("/check", checkAdmin)
+
+router.post("/songs", createSong);
+router.delete("/songs/:id", deleteSong);
 
 
-router.post("/album", protectRoute, requireAdmin, createAlbum);
-router.delete("/album:id", protectRoute, requireAdmin, deleteAlbum);
+router.post("/album", createAlbum);
+router.delete("/album:id", deleteAlbum);
 
 export default router;
 // Add more admin routes here as needed

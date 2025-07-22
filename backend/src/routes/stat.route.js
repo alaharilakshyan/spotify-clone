@@ -1,9 +1,12 @@
 import { Router } from "express";
-
+import { Song } from "../models/song.model.js";
+import { User } from "../models/user.model.js"; 
+import { getStats } from "../controllers/stat-controller.js";
+import { Album } from "../models/album.model.js";
+import { protectRoute, requireAdmin } from "../middleware/auth.middleware.js";
+    
 const router = Router();
 
-router.get("/", (req, res) => {
-    res.send({ message: "Stat route is working!" });
-});
+router.get("/", protectRoute, requireAdmin, getStats);
 
 export default router;

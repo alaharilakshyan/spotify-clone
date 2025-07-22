@@ -1,5 +1,5 @@
-import {songs} from "#models/song.model.js";
-import {Album} from "#models/album.model.js";
+import Song from "#models/song.model";
+import {Album} from "#models/album.model";
 import cloudinary from "../lib/cloudinary.js"
 
 const uploadToCloudinary = async(file) => {
@@ -33,12 +33,11 @@ export const createSong = async (req, res, next) => {
     const song = new Song({
       title,
       artist,
-      albumId,
       audioUrl,
       imageUrl,
       duration,
       albumId: albumId || null
-    })
+    });
 
     await song.save();
 
@@ -59,18 +58,21 @@ export const createSong = async (req, res, next) => {
 export const deleteSong = async(req, res, next) => {
   try{
     const {id}= req.params
+    
+    // Use findByIdAndDelete to find and delete the song in one go.
+    const song = await Song.findByIdAndDelete(id);
 
-    const song = await Song.fingById(id)
-
-// if song belongs to an album, update the album's song array
-    if(song.albumId){
-      await Album.findByIdAndUpdate(songs.albumId,{
-        $pull: { songs: song._id },
-      })
+    if (!song) {
+      return res.status(404).json({ message: "Song not found" });
     }
-
-    await song.findByIdAndUpdate(id)
-    res.status(200).json({message: "SOng deleted successfully"});
+    
+    // if song belongs to an album, update the album's song array
+    if(song.albumId){
+      await Album.findByIdAndUpdate(song.albumId, {
+        $pull: { songs: song._id },
+      });
+    }
+    res.status(200).json({message: "Song deleted successfully"});
 
 
   }catch(error){
@@ -121,4 +123,6 @@ export const createAlbum = async (req, res, next) => {
 
 
  //check admin & user login
- 
+ export const checkAdmin = async(req, res, next) => {
+  req.status(200).json({ admin: true });
+ }
