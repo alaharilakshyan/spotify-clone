@@ -4,6 +4,8 @@ import { clerkMiddleware } from '@clerk/express';;
 import { connectDB } from './lib/db.js';
 import fileupload from 'express-fileupload';
 import path from 'path';
+import cors from 'cors';
+
 
 import userRoutes from './routes/user.route.js';
 import adminRoutes from './routes/admin.route.js';
@@ -18,6 +20,13 @@ dotenv.config();
 const __dirname = path.resolve(); // Get the current directory name
 const app = express();
 const PORT = process.env.PORT;
+
+app.use(cors({
+  origin: "http://localhost:3000",
+  credentials: true // Allow credentials to be sent
+}
+));
+
 
 app.use(express.json()); //to parse req.body
 app.use(clerkMiddleware()); // Clerk middleware for authentication
