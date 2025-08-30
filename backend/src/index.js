@@ -23,19 +23,21 @@ const PORT = process.env.PORT;
 
 app.use(cors({
   origin: "http://localhost:3000",
-  credentials: true // Allow credentials to be sent
+  credentials: true, // Allow credentials to be sent
 }
 ));
 
 
 app.use(express.json()); //to parse req.body
 app.use(clerkMiddleware()); // Clerk middleware for authentication
-app.use(fileUpload({
-  useTempFiles: true, // Use temporary files for uploads
-  tempFileDir: path.join(__dirname, 'tmp'), // Directory for temporary files
-  createParentPath: true, // Create parent directories if they don't exist
-  limits: { fileSize: 50 * 1024 * 1024 } // Limit file size to 50MB
-})); // Middleware for file uploads
+app.use(
+  fileUpload({
+    useTempFiles: true, // Use temporary files for uploads
+    tempFileDir: path.join(__dirname, 'tmp'), // Directory for temporary files
+    createParentPath: true, // Create parent directories if they don't exist
+    limits: { fileSize: 50 * 1024 * 1024 }, // Limit file size to 50MB
+  }),
+); // Middleware for file uploads
 
 
 
